@@ -1,0 +1,18 @@
+{
+    "appTitel": "E-Shop",
+    "@appTitel": {
+      "description": "Application titel"
+    },
+    "auhtentification": "Authentification",
+    "@auhtentification": {
+      "description": "auhtentification"
+    },
+    "login": "User name",
+    "@login": {
+      "description": "login"
+    },
+    "password": "Password",
+    "@password": {
+      "description": "password"
+    }
+}
