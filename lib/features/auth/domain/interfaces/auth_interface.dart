@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:eshop/commen/util/exception/auth_failures.dart';
+import 'package:eshop/commen/util/exception/failures.dart';
 import 'package:eshop/commen/util/exception/signup_failures.dart';
 import 'package:eshop/features/auth/domain/entities/utilisateur.dart';
 
@@ -19,7 +20,7 @@ abstract class AuthInterface {
     throw UnimplementedError();
   }
 
-  Future<Either<AuthentificationFailure, bool>> signInWithEmailAndPassword({
+  Future<Either<Failures, bool>> signInWithEmailAndPassword({
     required String email,
     required String password,
   }) async {

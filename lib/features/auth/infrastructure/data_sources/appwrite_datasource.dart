@@ -11,10 +11,11 @@ import 'package:injectable/injectable.dart';
 class AppwriteDataSource {
   late Client _client;
   AppwriteDataSource() {
+    debugPrint('AppwriteDataSource');
     _client = Client();
     _client
-        .setEndpoint('http://localhost/v1') // Your Appwrite Endpoint
-        .setProject('6263cded96d5114e2993') // Your project ID
+        .setEndpoint('http://172.20.11.4/v1') // Your Appwrite Endpoint
+        .setProject('62672942734c1f94397d') // Your project ID
         .setSelfSigned(status: true);
   }
 
@@ -26,10 +27,9 @@ class AppwriteDataSource {
         email: email,
         password: password,
       );
-
-      debugPrint(_session.toMap().toString());
-      return Right(Utilisateur(
-          _session.userId, _session.clientName, _session.providerUid));
+      return Right(
+        Utilisateur(_session.userId, _session.clientName, _session.providerUid),
+      );
     } on AppwriteException catch (e) {
       return Left(
         AuthentificationFailure(

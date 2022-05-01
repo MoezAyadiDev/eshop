@@ -10,7 +10,9 @@
 import 'package:eshop/commen/util/exception/failures.dart';
 
 class SignUpFailure implements Failures {
+  @override
   final int? error;
+  @override
   final String? message;
   const SignUpFailure({
     required this.error,

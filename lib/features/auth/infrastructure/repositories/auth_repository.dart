@@ -1,7 +1,9 @@
 import 'dart:async';
 
 import 'package:dartz/dartz.dart';
-import 'package:eshop/commen/util/exception/auth_failures.dart';
+import 'package:eshop/commen/util/connectivity/network_info.dart';
+import 'package:eshop/commen/util/exception/failures.dart';
+import 'package:eshop/commen/util/exception/internet_failures.dart';
 import 'package:eshop/commen/util/exception/signup_failures.dart';
 import 'package:eshop/features/auth/domain/entities/utilisateur.dart';
 import 'package:eshop/features/auth/domain/interfaces/auth_interface.dart';
@@ -11,8 +13,9 @@ import 'package:injectable/injectable.dart';
 
 @Singleton(as: AuthInterface)
 class AuthRepository implements AuthInterface {
-  AuthRepository(this.dataSource);
+  AuthRepository(this.dataSource, this.networkInfo);
   final AppwriteDataSource dataSource;
+  final NetworkInfo networkInfo;
   bool isAuthenticated = false;
   Utilisateur? _user;
 
@@ -44,25 +47,31 @@ class AuthRepository implements AuthInterface {
   }
 
   @override
-  Future<Either<AuthentificationFailure, bool>> signInWithEmailAndPassword({
+  Future<Either<Failures, bool>> signInWithEmailAndPassword({
     required String email,
     required String password,
   }) async {
-    var _isLoggedIn = await dataSource.signInWithEmailAndPassword(
-      email,
-      password,
-    );
-    return _isLoggedIn.fold(
-      (l) {
-        return Left(l);
-      },
-      (r) {
-        _controller.add(r);
-        isAuthenticated = true;
+    if (await networkInfo.isConnected) {
+      var _isLoggedIn = await dataSource.signInWithEmailAndPassword(
+        email,
+        password,
+      );
+      return _isLoggedIn.fold(
+        (l) {
+          return Left(l);
+        },
+        (r) {
+          _controller.add(r);
+          isAuthenticated = true;
 
-        return const Right(true);
-      },
-    );
+          return const Right(true);
+        },
+      );
+    } else {
+      return const Left(
+        INTERNET_FAILURE,
+      );
+    }
   }
 
   @override
